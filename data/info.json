@@ -1,0 +1,337 @@
+{
+	"title" : "Topics in <em>Signs</em>",
+	"meta_info" : "",
+	"VIS" : {
+		"bib_view" : {
+			"major" : "issue",
+			"minor" : "journal",
+			"dir" : "up"
+		},
+		"prefab_plots" : false,
+		"model_view" : {
+                        "w": 500,
+			"aspect" : 2,
+			"words" : 8,
+			"size_range" : [
+				6,
+				14
+			],
+                        "yearly": {
+                            "w": 500,
+                            "label_threshold": 30
+                        },
+                        "name_size": 13
+		},
+		"word_view" : {
+			"row_height" : 100,
+                        "w": 700,
+                        "topic_label_leading": 16,
+			"m" : {
+				"left" : 150,
+				"right" : 50,
+				"top" : 50,
+				"bottom" : 0
+			}
+		},
+		"bib" : {
+			"author_delimiter" : ", "
+		},
+		"special_issue_class" : "special_issue_nohighlight",
+                "hidden_topics": [8,44,49],
+                "show_hidden_topics": false
+	},
+	"issues" : [
+		[
+			"39_1",
+			"Women, Gender, and Prison: National and Global Perspectives",
+			"http://www.jstor.org/stable/10.1086/670813"
+		],
+		[
+			"38_4",
+			"Intersectionality: Theorizing Power, Empowering Theory",
+			"http://www.jstor.org/stable/10.1086/669610"
+		],
+		[
+			"37_4",
+			"Sex: A Thematic Issue",
+			"http://www.jstor.org/stable/10.1086/662942"
+		],
+		[
+			"37_2",
+			"Unfinished Revolutions",
+			"http://www.jstor.org/stable/10.1086/661729"
+		],
+		[
+			"36_1",
+			"Feminists Theorize International Political Economy",
+			"http://www.jstor.org/stable/10.1086/651184"
+		],
+		[
+			"35_2",
+			"Women in Agriculture",
+			"http://www.jstor.org/stable/10.1086/605521"
+		],
+		[
+			"34_4",
+			"Reproductive and Genetic Technologies",
+			"http://www.jstor.org/stable/10.1086/588449"
+		],
+		[
+			"33_1",
+			"War and Terror II: Raced‐Gendered Logics and Effects beyond Conflict Zones",
+			"http://www.jstor.org/stable/10.1086/518275"
+		],
+		[
+			"32_4",
+			"War and Terror I: Raced‐Gendered Logics and Effects in Conflict Zones",
+			"http://www.jstor.org/stable/10.1086/500753"
+		],
+		[
+			"31_3",
+			"New Feminist Theories of Visual Culture",
+			"http://www.jstor.org/stable/10.1086/signs.2006.31.issue-3"
+		],
+		[
+			"30_4",
+			"New Feminist Approaches to Social Science Methodologies",
+			"http://www.jstor.org/stable/10.1086/signs.2005.30.issue-4"
+		],
+		[
+			"30_1",
+			"Beyond the Gaze: Recent Approaches to Film Feminisms",
+			"http://www.jstor.org/stable/10.1086/signs.2004.30.issue-1"
+		],
+		[
+			"29_2",
+			"Development Cultures: New Environments, New Realities, New Strategies",
+			"http://www.jstor.org/stable/10.1086/signs.2004.29.issue-2"
+		],
+		[
+			"28_3",
+			"Gender and Science: New Issues",
+			"http://www.jstor.org/stable/10.1086/signs.2003.28.issue-3"
+		],
+		[
+			"28_1",
+			"Gender and Cultural Memory",
+			"http://www.jstor.org/stable/10.1086/signs.2002.28.issue-1"
+		],
+		[
+			"26_4",
+			"Globalization and Gender",
+			"http://www.jstor.org/stable/i358953"
+		],
+		[
+			"25_4",
+			"Feminisms at a Millennium",
+			"http://www.jstor.org/stable/i358949"
+		],
+		[
+			"24_4",
+			"Institutions, Regulation, and Social Control",
+			"http://www.jstor.org/stable/i358945"
+		],
+		[
+			"23_3",
+			"Feminisms and Youth Cultures",
+			"http://www.jstor.org/stable/i358940"
+		],
+		[
+			"21_4",
+			"Feminist Theory and Practice",
+			"http://www.jstor.org/stable/i358933"
+		],
+		[
+			"20_4",
+			"Postcolonial, Emergent, and Indigenous Feminisms",
+			"http://www.jstor.org/stable/i358928"
+		],
+		[
+			"19_4",
+			"Feminism and the Law",
+			"http://www.jstor.org/stable/i358924"
+		],
+		[
+			"18_4",
+			"Theorizing Lesbian Experience",
+			"http://www.jstor.org/stable/i358920"
+		],
+		[
+			"16_4",
+			"Women, Family, State, and Economy in Africa",
+			"http://www.jstor.org/stable/i358912"
+		],
+		[
+			"15_3",
+			"The Ideology of Mothering: Disruption and Reproduction of Patriarchy",
+			"http://www.jstor.org/stable/i358907"
+		],
+		[
+			"14_4",
+			"Common Grounds and Crossroads: Race, Ethnicity, and Class in Women's Lives",
+			"http://www.jstor.org/stable/i358904"
+		],
+		[
+			"14_2",
+			"Working Together in the Middle Ages: Perspectives on Women's Communities",
+			"http://www.jstor.org/stable/i358902"
+		],
+		[
+			"13_1",
+			"Women and the Political Process in the United States",
+			"http://www.jstor.org/stable/i358897"
+		],
+		[
+			"12_4",
+			"Within and Without: Women, Gender, and Theory",
+			"http://www.jstor.org/stable/i358896"
+		],
+		[
+			"12_2",
+			"Reconstructing the Academy",
+			"http://www.jstor.org/stable/i358894"
+		],
+		[
+			"10_4",
+			"Communities of Women",
+			"http://www.jstor.org/stable/i358887"
+		],
+		[
+			"10_2",
+			"Women and Poverty",
+			"http://www.jstor.org/stable/i358885"
+		],
+		[
+			"9_4",
+			"The Lesbian Issue",
+			"http://www.jstor.org/stable/i358882"
+		],
+		[
+			"8_3",
+			"Women and Violence",
+			"http://www.jstor.org/stable/i358877"
+		],
+		[
+			"7_3",
+			"Feminist Theory",
+			"http://www.jstor.org/stable/i358873"
+		],
+		[
+			"7_2",
+			"Development and the Sexual Division of Labor",
+			"http://www.jstor.org/stable/i358872"
+		],
+		[
+			"6_2",
+			"Studies in Change",
+			"http://www.jstor.org/stable/i358868"
+		],
+		[
+			"6_1",
+			"Women: Sex and Sexuality, Part 2",
+			"http://www.jstor.org/stable/i358867"
+		],
+		[
+			"5_4",
+			"Women: Sex and Sexuality",
+			"http://www.jstor.org/stable/i358866"
+		],
+		[
+			"5_3S",
+			"Supplement. Women and the American City",
+			"http://www.jstor.org/stable/i358883"
+		],
+		[
+			"4_4",
+			"The Labor of Women: Work and Family",
+			"http://www.jstor.org/stable/i358862"
+		],
+		[
+			"4_1",
+			"Women, Science, and Society",
+			"http://www.jstor.org/stable/i358859"
+		],
+		[
+			"3_1",
+			"Women and National Development: The Complexities of Change",
+			"http://www.jstor.org/stable/i358855"
+		],
+		[
+			"1_3S",
+			"Women and the Workplace: The Implications of Occupational Segregation",
+			"http://www.jstor.org/stable/i358849"
+		]
+	],
+        "names": {
+"1": "War / Germany",
+"2": "Black feminism",
+"3": "Sex work",
+"4": "Motherhood",
+"5": "Science",
+"6": "Media images",
+"7": "Medieval women",
+"8": "make, fact, point, question",
+"9": "Visual art",
+"10": "France / Classics",
+"11": "Marxism and feminism",
+"12": "Birth",
+"13": "Reproductive medicine",
+"14": "Psychology and women",
+"15": "Israel and Palestine",
+"16": "Sports",
+"17": "Biology of sex",
+"18": "Women’s roles",
+"19": "Poetry",
+"20": "Speech",
+"21": "Memory and trauma",
+"22": "Sexual harrassment / Zines",
+"23": "Bodies",
+"24": "Love in literature",
+"25": "Central and Eastern Europe",
+"26": "Prison",
+"27": "Film",
+"28": "India",
+"29": "Lesbian, gay, queer",
+"30": "The social",
+"31": "Domestic and urban",
+"32": "Education",
+"33": "Japan",
+"34": "Indigenous peoples",
+"35": "Rural economies",
+"36": "Prostitution",
+"37": "Writing and reading",
+"38": "International development",
+"39": "Women’s health",
+"40": "Gender theory",
+"41": "Philosophy",
+"42": "Politics of difference",
+"43": "Medicine",
+"44": "woman, life, man, world",
+"45": "China",
+"46": "Africa",
+"47": "Islam",
+"48": "Asian American / Caribbean",
+"49": "rice, Dutch, Jewish, Somali",
+"50": "Sexual violence",
+"51": "Historical terms",
+"52": "Labor",
+"53": "Religion",
+"54": "Performance",
+"55": "Chicana and Latina",
+"56": "Literary criticism",
+"57": "Ethics",
+"58": "Family, poverty, welfare",
+"59": "Law",
+"60": "Quantitative methods",
+"61": "Physical anthropology",
+"62": "Political movements",
+"63": "Women’s studies",
+"64": "Information technology",
+"65": "Globalization",
+"66": "Sexuality",
+"67": "Feminist movements",
+"68": "French feminism",
+"69": "U.S. Women’s History",
+"70": "Latin America"
+         }
+}

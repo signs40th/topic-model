@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+"""
+Test server for the topic model browser.
+
+By default, serves on localhost:8888. Takes a port number as argument.
+
+"""
+
+import SimpleHTTPServer
+import re
+
+class BetamodelHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
+
+if __name__ == '__main__':
+    import sys
+    if not sys.argv[1:]:
+        sys.argv.append(8888)
+
+    SimpleHTTPServer.test(BetamodelHandler)

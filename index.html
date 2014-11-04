@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- An Interactive Topic Model of Signs. Except where noted, all source code, text, and graphics are copyright 2014 Andrew Goldstone, Susana Galán, C. Laura Lovin, Andrew Mazzaschi, and Lindsey Whitmore. -->
+<head>
+  <meta charset="utf-8">
+  <title>Signs at 40: Topic Model</title>
+  <script type="text/javascript" src="lib/d3.min.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/bootstrap.min.css" media="screen">
+
+  <link rel="stylesheet" href="css/model.css" type="text/css">
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-35320406-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse" role="navigation" id="main_navbar">
+  <div class="container">
+    <div class="row" id="main_nav_row">
+      <div class="col-md-3">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main_nav_collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">
+            <img id="40th_logo"
+            src="/img/signs-at-40-logo.png" />
+          </a>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="collapse navbar-collapse" id="main_nav_collapse">
+        <ul class="nav navbar-nav navbar-right" id="main_nav_links">
+          <li><a href="/">Home</a></li>
+          <li class="active"><a href="#">Topic Model</a></li>
+          <li><a href="/tocs/">Curated Contents</a></li>
+          <li><a href="/cocitation/">Cocitation Network</a></li>
+          <li><a href="/cover-art/">Cover Art</a></li>
+          <li><a href="/commentaries">Editorial Comments</a></li>
+        </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<div class="modal fade" id="getting_started_modal" tabindex="-1"
+    role="dialog" aria-labelledby="getting_started_title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="getting_started_title">An interactive topic model of <em>Signs</em></h4>
+      </div>
+      <div class="modal-body">
+        <p>This part of the <em>Signs at 40</em> virtual issue invites you to explore the archive of <a href="http://signsjournal.org/" target="_blank"><em>Signs</em></a> (1975–2014) through a model that describes each article as a mixture of verbal patterns or <em>topics</em>.  Every topic is a family of words that tend to occur together in articles—as, for example, <a href="#/topic/65"><em>world</em>, <em>global</em>, and <em>states</em></a> do. Every article is in turn divided into multiple topics.  Words, too, may belong to more than one topic. The word <a href="#/word/women"><em>women</em></a>, for instance, is part of many topics. By following the shifting proportions of topics over time, we offer one way into thinking about the history of <em>Signs</em> in its first four decades.</p>
+        <p>Click on anything you see to focus in on a particular topic, word, or article, or use the navigation menu on the left side. There are several overviews showing all of the topics in the model:  The <a href="#/model/grid">grid</a> overview represents topics as circles containing their most prominent words; hover the mouse over the circles to see our interpretive labels. A second graphical overview shows <a href="#/model/scaled">related topics near one another</a>. There is also a <a href="#/model/list">sortable list of the topics</a> and a visualization of <a href="#/model/yearly">relative topic proportions over time</a>.</p>
+        <p>On the pages devoted to <a href="#/about">interpreting this model</a>, we explain how this model was created and suggest some of the interpretive possibilities it offers. In the <a href="/commentaries">Editorial comments</a> section of this virtual issue, you will also find commentary by <em>Signs</em> editors and collaborators on this model.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-right"
+            data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="settings_modal" tabindex="-1"
+    role="dialog" aria-labelledby="settings_title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="settings_title">Settings</h4>
+      </div>
+      <div class="modal-body">
+        <form role="form">
+          <div>
+            <input id="highlight_special" type="checkbox">
+            <label class="special_issue">
+              Highlight special-issue articles
+              <span class="special_issue_example">with color</span>
+            </label>
+          </div>
+          <div>
+            <input id="reveal_hidden" type="checkbox">
+            <label>
+              Show hidden topics<br />
+            </label>
+            <p class="help-block">(see <a href="#/about/depth">Exploring in depth</a> for an explanation)</p>
+          </div>
+          <div>
+            <input id="n_words_list" type="number">
+            <label>topic top words in lists</label>
+          </div>
+          <div>
+            <input id="n_words_topic" type="number">
+            <label>topic top words on the topic page</label>
+          </div>
+          <div>
+            <input id="n_topic_docs" type="number">
+            <label>top articles on the topic page</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-right"
+            data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="main_container" class="container-fluid">
+<div class="row">
+
+<div id="dfb_nav" class="col-md-2 col-sm-2 col-xs-12">
+  <div id="dfb_nav_collapse">
+    <ul id="nav_main" class="nav nav-stacked">
+      <li id="nav_model">
+        <a href="#/model">Overviews</a>
+        <ul id="nav_model_nav" class="nav nav-stacked">
+          <li id="nav_model_grid" class="active">
+            <a href="#/model/grid">Topic grid</a>
+          </li>
+          <li id="nav_model_scaled">
+            <a href="#/model/scaled">Topic space</a>
+          </li>
+          <li id="nav_model_list">
+            <a href="#/model/list">Topic list</a>
+          </li>
+          <li id="nav_model_yearly">
+            <a href="#/model/yearly">Topics over time</a>
+              <ul id="yearly_choice"
+                class="nav nav-stacked hidden">
+                <li id="nav_model_yearly_frac" class="active">
+                  <a href="#/model/yearly/frac">yearly %</a>
+                </li>
+                <li id="nav_model_yearly_raw">
+                  <a href="#/model/yearly/raw">word counts</a>
+                </li>
+              </ul>
+          </li>
+        </ul>
+      </li>
+      <li id="nav_topic" class="dropdown">
+        <a href="#/topic" class="dropdown-toggle" data-toggle="dropdown" data-target="#" id="topic_dropdown_toggle">
+          Topic<b class="caret"></b>
+        </a>
+        <ul id="topic_dropdown" class="dropdown-menu scroll-menu" role="menu" aria-labelledby="topic_dropdown_toggle">
+          <li class="disabled loading_message">
+            <a href="#/topic">Loading topics...</a>
+          </li>
+        </ul>
+      </li>
+      <li id="nav_doc"><a href="#/doc">Article</a></li>
+      <li id="nav_word"><a href="#/word">Word</a></li>
+      <li id="nav_bib"><a href="#/bib">Bibliography</a></li>
+      <li id="nav_words"><a href="#/words">Word index</a></li>
+      <li id="nav_about">
+        <a href="#/about">Interpreting the model</a>
+        <ul class="nav nav-stacked">
+          <li id="nav_about_intro"><a href="#/about/intro">
+            Introduction</a></li>
+          <li id="nav_about_topic_modeling"><a href="#/about/topic_modeling">
+            About topic modeling</a></li>
+          <li id="nav_about_overview"><a href="#/about/overview">
+            Reading the overview</a></li>
+          <li id="nav_about_depth"><a href="#/about/depth">
+            Exploring in depth</a></li>
+          <li id="nav_about_hidden"><a href="#/about/hidden">
+            “Hidden” topics</a></li>
+          <li id="nav_about_choices"><a href="#/about/choices">
+            Modeling choices</a></li>
+        </ul>
+      </li>
+      <li id="nav_settings">
+        <a href="#settings">
+          Settings
+        </a>
+      </li>
+      <li id="nav_help">
+        <a href ="#getting_started"
+            data-toggle="modal" data-target="#getting_started_modal">
+          Getting started
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div id="view" class="col-md-10 col-sm-10 col-xs-12">
+  <div id="error" class="alert alert-danger alert-dismissable hidden">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  </div>
+
+  <div id="warning" class="alert alert-warning alert-dismissable hidden">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  </div>
+
+  <div id="model_view" class="hidden">
+    <button id="reset_zoom" type="button"
+      class="btn btn-default btn-xs pull-right invisible
+        view_model_scaled-vis view_model_yearly-vis">
+      Reset zoom
+    </button>
+    <div id="model_view_list" class="hidden">
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th id="model_view_list_year" class="sort">
+              <a href="#/model/list/year" title="click to sort by max year">
+              over time
+              </a><span class="glyphicon glyphicon-sort"></span>
+            </th>
+            <th id="model_view_list_name" class="sort">
+              <a href="#/model/list/name" title="click to sort">
+                topic (and top words)
+              </a><span class="glyphicon glyphicon-sort"></span>
+            </th>
+            <th colspan="2" id="model_view_list_frac" class="sort text-right">
+              <a href="#/model/list/frac" title="click to sort">
+                proportion of corpus
+              </a><span class="glyphicon glyphicon-sort"></span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="calc-done">
+        </tbody>
+      </table>
+    </div>
+    <div id="model_view_plot" class="hidden">
+    </div>
+    <div id="model_view_yearly" class="hidden">
+    </div>
+  </div>
+
+  <div id="about_view" class="hidden">
+    <div class="row">
+      <div id="discussion_text" class="col-md-10">
+<div id="about_intro">
+  <h2>Interpreting the topic model of <em>Signs</em></h2>
+  <p>These pages use the results of a computer-assisted <em>topic modeling</em> technique to explore thematic and rhetorical patterns in the history of <em>Signs</em> from its first issue in 1975 up until 2014. The topic model offers pathways through the overall tendencies that have characterized the journal and novel routes to particular articles from the journal’s run so far. Here, we give some suggestions for exploring and interpreting the model using this website, and a number of feminist scholars offer their reflections on the <a href="/commentaries">Editorial Comments pages</a>. Yet we hope you will discover new patterns and trends yourself—and that you may find this a useful way to (re)discover aspects of the <em>Signs</em> archive and to open up new channels of interpretation for the field of feminist scholarship. </p>
+  <h3>Contents</h3>
+  <ul class="list-unstyled">
+    <li><a href="#/about/topic_modeling">
+      About topic modeling</a></li>
+    <li><a href="#/about/overview">
+      Reading the overview</a></li>
+    <li><a href="#/about/depth">
+      Exploring in depth</a></li>
+    <li><a href="#/about/hidden">
+      “Hidden” topics</a></li>
+    <li><a href="#/about/choices">
+      Modeling choices</a></li>
+  </ul>
+
+  <h3>Citing this topic model</h3>
+  <p>Please cite this interactive topic model as follows:</p>
+  <blockquote><p>
+    Goldstone, Andrew, Susana Galán, C. Laura Lovin, Andrew Mazzaschi, and Lindsey Whitmore. <em>An Interactive Topic Model of</em> Signs. <em>Signs at 40</em>. <a href="http://signsat40.signsjournal.org/topic-model">http://signsat40.signsjournal.org/topic-model</a>. 2014.
+    </p></blockquote>
+
+  <p>Each individual page displaying some part of the model has a distinctive
+URL, which you can copy from your web browser’s location bar. For example, the
+overview in the form of a list has the URL <a href="http://signsat40.signsjournal.org/topic-model/#/model/list">http://signsat40.signsjournal.org/topic-model/#/model/list</a>.</p>
+
+</div>
+<div id="about_topic_modeling">
+  <h3>About topic modeling</h3>
+  <p>Topic modeling is an approach from the field of machine learning which seeks to characterize a large number of documents algorithmically in terms of a smaller number of themes or word clusters (referred to as <em>topics</em>). The result of applying the algorithm is a <em>model:</em> deliberately simplifying the documents, it attempts to describe their interconnections concisely and cogently.</p>
+  <p>A topic, for the purposes of modeling, is a collection of words that tend to occur in the same documents. One topic here is characterized by the frequency of the words <a href="#/topic/62"><em>political, movement, politics</em>, and <em>national</em></a>. We have labeled this the <em>Political movements</em> topic, because these words are often used together to discuss political movements, but the topic itself is only the verbal pattern of co-occurence. Because the technique focuses on words that occur together, it attempts to capture the way that the same word may be used (sometimes with different meanings) in different contexts. Thus, another topic also using the word <em>political</em> is characterized by words like <a href="#/topic/11"><em>class, political, public</em>, and <em>state</em></a>. We have labeled this the <em>Marxism and feminism</em> topic: it reflects a rather different pattern of usage that also frequently includes the word <em>political</em>.</p>
+  <p>Because topics are models of word usage, the term <em>topic</em> is misleadingly narrow. The patterns of language are often better described as <em>discourses</em>, <em>topoi</em>, or <em>rhetorical frames</em>. The attraction of topic modeling is precisely its capacity to capture (if only approximately) these central concepts of cultural and political analysis.</p>
+  <p>The particular technique we have used is Latent Dirichlet Allocation, an algorithm first described by David Blei, Andrew Ng, and Michael Jordan <a target="_blank" href="http://dl.acm.org/citation.cfm?id=944919.944937">in a 2003 article</a> (Blei has more recently written <a target="_blank" href="http://dl.acm.org/citation.cfm?id=2133826">an explanation for a broader audience</a> as well). Like most such algorithms, it focuses its attention solely on patterns of word use, not the order of words in a document. The topic labels have been added by us after the algorithmic modeling process; they reflect our interpretive judgments.</p>
+  <p>The model treats each article in <em>Signs</em> as a mixture of topics, recognizing that the typical article incorporates multiple major themes or discourses. Thus, for example, Mary Hawkesworth’s 2011 editorial “<a href="#/doc/454"><em>Signs</em> 2005–2015: Reflections on the Nature and Global Reach of Interdisciplinary Feminist Knowledge Production</a>,” is divided by the model among many topics, including, most prominently, a topic related to discussions of the field of <a href="#/topic/63">women’s studies</a> (words like <em>studies, feminist, work, research</em>), another focused on the broad theme of <a href="#/topic/30">the social</a> (<em>social, power, experience</em>), and a third related to <a href="#/topic/65">globalization</a> (<em>world, global, states</em>). As this example indicates, these patterns of word use are by no means definitive interpretations of the content and rhetoric of an individual text; instead, this model offers a guide for exploration and further reading. (The appearance of several other topics in small proportions, some likely irrelevant to the meaning of the text, reveals the statistical nature of the model, which is always subject to error.)</p>
+  <p>This browser serves as one way of visualizing our model of the <em>Signs</em> archive. It presents multiple ways of viewing topics: individual topics over time; articles that are most strongly associated with particular topics; multiple topics contained in each article; and the words that contribute most significantly to each topic.</p>
+</div>
+  
+<div id="about_overview">
+  <h3>Reading the overview</h3>
+  <p>The <a href="#">overview</a> pages show all topics at once. There are four overview pages. In any of them, click a topic to examine it in more depth.</p>
+
+  <h4>The topic grid</h4>
+  <p>In the <a href="#/model/grid">grid</a>, the topics are arranged in a grid (alphabetically by label). Topics are represented by the most frequent words in the topic enclosed in a circle. As you hover the mouse pointer over a topic, its label appears. The relative size of a word in the circle reflects its weight in a topic.</p>
+
+  <h4>Topic space: a scaled map of the topics</h4>
+<p><a href="#/model/scaled">This model overview</a> is “to scale,” in the sense that topics are placed close to one another if they have similar distributions of frequent words. This visualization allows you to see some of the relations among topics. To see overlapping topics more clearly, hover the mouse over a topic (this also reveals topic labels). Hold Shift and drag the mouse to pan, and scroll or double-click to zoom.</p>
+
+  <h4>The topic list</h4>
+  <p>The <a href="#/model/list">list of topics</a> presents the model as a table. Topics are identified by our own interpretive label (in italics) and by their most frequent words. To help compare topics, the table can be sorted in several ways by clicking the table’s column headers. </p>
+  <p><a href="#/model/list"><img class="img-responsive img-thumbnail center-block" src="img/list-thumbnail.png"></a></p>
+    <p>On the left is a miniature graph of the topic over time (visible more fully on the specific pages for each topic; see below). This gives a rough sense of the distribution of the topic over the forty years of the <em>Signs</em> archive. Click the column’s header (“1975–2014”) to sort by the year in which the topic attains its maximum proportion within the overall corpus, and click again to reverse the order. (Note that the y-axes of these miniature bar charts are not all on the same scale.) <a href="#/model/list/year/up">Sorting chronologically</a> in this manner may be of particular interest since it can point to topics that have strong trends over time.</p>
+    <p>Click the “top words” header to see <a href="#/model/list/words">the list sorted alphabetically by topic label</a>. On the far right is the proportion of all the words in the corpus assigned to the given topic, visualized by the length of the blue bars. <a href="#/model/list/frac">Sorting by corpus proportion</a> moves topics that are assigned to a high proportion of the overall corpus to the top. These proportions are difficult to interpret; the highest-proportion topics are sometimes the <em>least</em> interesting parts of the model—agglomerations of very common words without a clear thematic content. To simplify matters, we have hidden some of these topics from view by default (they can be revealed using the <a href ="#/settings">settings dialog</a>).</p>
+
+  <h4>Topics over time</h4>
+  <p><a href="#/model/yearly">This version of the overview</a> visualizes each topic’s relative prominence over time using a streamgraph. The height of each topic’s stream shows the proportion of the topic in a given year. Colors are used to distinguish topics from one another (colors are not, however, unique to each topic; they repeat after twenty colors). The stacking order of the topic is determined by a heuristic for making the visualization less jagged, and the topics are designated by their labels. Clicking on any of the individual streams takes you to the topic’s more detailed page.</p>
+  <p><a href="#/model/yearly"><img class="img-responsive img-thumbnail center-block" src="img/yearly-thumbnail.jpg"></a></p>
+  <p>“Islands” of prominence sometimes indicate special issues of <em>Signs</em> devoted to a particular topic. For example, the sudden spread of the light green stream near the bottom (the stream for the <a class="topic_label" href="#/topic/7"><em>Medieval women</em></a> topic) in the late 1980s largely represents the 1989 special issue, “Working Together in the Middle Ages: Perspectives on Women’s Communities.” Topics with other unusual patterns over time are also visible in this overview. To take exploration a little further, pan and zoom the view (using the mouse to scroll or holding down Shift while dragging). As you zoom, more topic labels appear, attached to moments of prominence for their topics.</p>
+  <p>By default this display shows the <em>percentages of the year’s words</em> accounted for by a topic. But it can also be shifted to display <a href="#/model/yearly/raw">raw counts of words assigned to topics</a> per year, since not all years contain the same number of words.</p>
+</div>
+  
+<div id="about_depth">
+  <h3>Exploring in depth</h3>
+  <h4>Topic pages</h4> 
+  <p>Each topic’s page gives a fuller sense of the makeup of that topic. The lefthand column shows the topic as a distribution of words, with each word’s frequency within the topic indicated by a blue bar. Clicking on any of the individual words in this column will take you to a list of all of the topics in which that word appears. </p>
+  <p>The topic page includes a list of the “Top articles” for the topic. This displays the articles that contain the highest proportion of the topic. For instance, for the topic labeled <a class="topic_label" href="#/topic/66">Sexuality</a>, Annamarie Jagose’s “<a href="#/doc/234">‘Critical Extasy’: Orgasm and Sensibility in <em>Memoirs of a Woman of Pleasure</em></a>” (vol. 32, no. 2) is listed first because the model estimates that 29.4 percent of that article is a discussion of this topic (it has assigned 1239 out of 3432 tokens in Jagose’s article to this topic). No article has a higher proportion of words in <span  class="topic_label">Sexuality</span>. Remember, however, that every article has multiple topics: the articles with the largest proportion of a particular topic may also have large proportions of other topics.</p>
+  <p>On the upper right is the time series. This gives a sense of the topic’s prominence over time. The y-axis is the yearly proportion of words in the corpus belonging to the topic—that is, out of all the words published in <em>Signs</em> in a given year, the percentage devoted to the particular topic. The bars emphasize that the model does not assume a smooth evolution from year to year in topics, and neither should we, but it is still possible to see trends over time. For example, <a class="topic_label" href="#/topic/65">Globalization</a> is clearly a topic whose prominence is relatively recent. However, it is not wholly absent in the early years of <em>Signs</em>, either. To focus on prominent articles in the topic <em>for a given year only</em>, click a year’s bar on the chart. Noticing that the topic has some presence in 1981, you might click on that year to view <a href="#/topic/65/1981">the list of 1981 articles with some words in <span class="topic_label">Globalization</span></a>.</p>
+  
+  <h4>Article pages</h4>
+  <p>An article page represents the estimated proportions of the various topics in a given article. For instance, in the article page for Maxine Baca Zinn’s “<a href="#/doc/1450">Family, Race, and Poverty in the Eighties</a>”, the model assigns the plurality, 31 percent, of the article to the <a class="topic_label" href="#/topic/58">Family, poverty, welfare</a> topic and 20 percent to the broad topic concerned with <a class="topic_label" href="#/topic/30">The social</a>. Further down the list, the topic related to <a class="topic_label" href="#/topic/60">Quantitative methods</a> accounts for some 7 percent, but this topic is notable because it is not wholly thematic: words like <em>percent</em> and <em>data</em> (prominent in this topic) occur together often when quantitative methods are used, regardless of subject matter. The article page also offers a link to the full text of the article on JSTOR. If the article was in a special issue of the journal, that issue’s name will also be displayed and linked to JSTOR.</p>
+  
+  <h4>Word pages</h4>
+  <p>The page for an individual word represents all the topics in which that word appears. Search for a particular word using the text box in the upper righthand corner. (Clicking on topic terms on a topic page also brings you to the word page.) You may also select a word from the <a href="#/words">list of all prominent words</a>. The topic model tends to divide occurrences of each word among multiple topics (for example, <a href="#/word/difference"><em>difference</em></a> is prominent in both <a class="topic_label" href="#/topic/42">Politics of difference</a> and <a class="topic_label" href="#/topic/68">French feminism</a>). This visualization helps to see the relative prominence of a single term across the topics to which it belongs; <em>difference</em> is rather more prominent, relatively speaking, in the <span class="topic_label">Politics of difference</span> topic than in <span class="topic_label">French feminism</span>. Click any word on this page to display that word’s prominent topics.</p>
+
+  <h4>The word index</h4>
+  <p>The <a href="#/words">word index</a> is an alphabetical list of words that are prominent in any topic. Click on a word to see its individual word page. This index does not include all the language of the articles, only words that are highly ranked in at least one topic. A more comprehensive search interface for the journal is available <a class="external" href="http://www.jstor.org/action/showPublication?journalCode=signs">on JSTOR</a>.</p>
+  
+  <h4>The bibliography</h4>
+<p><a href="#/bib">The bibliography</a> lists citations for all the articles included in the model. By default, articles are listed by the issue of <em>Signs</em> they appear in. To look up particular authors’ contributions, you can also sort the list <a href="#/bib/alpha/alpha">by author</a> or <a href="#/bib/year/alpha">by year and then by author</a>. However you sort, you can also use your browser’s own “Find” function to locate a particular article by title on this page.</p>
+  </p>
+  <p>Not every item published in <em>Signs</em> is to be found in this index, only those included in our topic model. See our discussion of <a href="#/about/choices">modeling choices</a> for an explanation of our decisions.
+  </p>
+
+  <h4>Special issues</h4>
+  <p><em>Signs</em> is distinguished by its frequent thematic special issues. Though we have not incorporated the distinction between special and regular issues into the topic model itself, the browser can highlight articles drawn from special issues, and there are suggestive connections between certain topics and particular special issues. To turn this feature on, visit the <a href="#/settings">Settings dialog</a> and click the “Highlight special-issue articles” checkbox. The <a href="#/bib">bibliography</a> also indicates which issues were special issues.</p>
+
+  <h4>Complexities</h4>
+  <p>This topic model is an algorithmic creation, and its categories are necessarily fuzzy. Because we model only the co-occurrence of words, it is possible for “topics” not to be perfectly coherent semantically. In this model, several topics appear to combine independent bodies of discourse: thus the <a class="topic_label" href="#/topic/1">War / Germany</a> topic covers both discussions of war more generally and discussions of Germany, but—thanks to the fact of World War II, it seems—the model has combined them. (Notice the appearance of the “word” <a href="#/word/ii">ii</a>—as in World War—in this topic.) We call this a “merged” topic; there are several others in this model.</p>
+  <p>Another possibility is the “intrusion” of a word into a topic where it seems out of place. This has the result of linking articles in which that intrusive word is prominent with a topic in a potentially misleading way. Thus, the common word <a href="#/word/life">life</a> is, in this model, most prominent in a topic otherwise largely specific to discussions of <a class="topic_label" href="#/topic/15">Israel and Palestine</a>. Some articles have a high proportion of this topic only because they use the word <em>life</em>, not because they discuss Israel and Palestine.</p>
+  <p>A few topics also appear not to capture clear patterns of meaning at all. These are hidden from view by default, as discussed in the <a href="#/about/hidden">section on hidden topics</a>.</p>
+</div>
+
+<div id="about_hidden">
+  <h3>“Hidden” topics</h3>
+  <p>In almost any algorithmically generated topic model, no matter how carefully prepared, some topics prove difficult to interpret meaningfully. Common words with flexible meanings are not always handled well by the modeling process, and as a result there are certain topics in our model that we have found to be more confusing than enlightening for exploring the <em>Signs</em> archive. We have hidden these, so that of the 70 topics only 67 are normally included in the listings and visualizations here. If you wish to view all of the topics from the model, visit the <a href="#/settings">Settings</a> and check the “Show hidden topics” box.</p>
+  <p>The omitted topics, which we have not labeled, are:</p>
+  <ul class="list-unstyled">
+    <li><a href="#/topic/8">make, fact, point, question</a></li>
+    <li><a href="#/topic/44">woman, life, man, world</a></li>
+    <li><a href="#/topic/49">rice, Dutch, Jewish, Somali</a></li>
+  </ul>
+</div>
+
+<div id="about_choices">
+  <h3>Modeling choices</h3>
+  <p>Despite the complexity of modeling topics, words, and articles all at once, in other respects a topic model like the one presented here represents a drastic simplification. We have disregarded word order: our model considers only the number of times a given word occurs in a given article, not their placement in relation to one another. The model of article composition is instead as follows.</p>
+  <p>Suppose I want to write a <em>Signs</em> article, operating according to the assumptions made by the model:</p>
+  <ol style="list-style-type: decimal">
+    <li>I begin with only one piece of information: the number of words I want to write. Let’s imagine I am writing a 5000-word article.</li>
+    <li>I randomly choose <em>proportions</em> of each of the 70 topics that will make up the article (I don’t have an even chance of picking any topic; instead, some topics are more likely than others, as the topic proportions in the <a href="#/model/list">topic list</a> suggest.)</li>
+    <li>Now I divide up my 5000 words according to the proportions I have picked. If I have randomly picked 50% of the topic <span class="topic_label">The Social</span> and 25% each of topics <span class="topic_label">Writing and reading</span> and <span class="topic_label">Labor</span>, then I will have 2500 words to pick from <span class="topic_label">The Social</span> and 1250 words from each of the other two.</li>
+    <li>Now I randomly pick the specified fraction of my total 5000 words from each topic. Picking words is like drawing Scrabble tiles from a bag: some words are much more likely than others. Each topic assigns distinctive probabilities to each word. When I take my 2500 words at random from <span class="topic_label">The social</span>, I am likely to come up the word <em>social</em> many times, <em>power</em> somewhat less often, <em>nature</em> occasionally but not often, and so on. When I draw 1250 words each from  <span class="topic_label">Writing and reading</span> and <span class="topic_label">Labor</span>, the most frequently chosen words will be quite different.</li>
+    <li>Leaving the words in their random order, and entirely neglecting to include prepositions, definite or indefinite articles, or punctuation, I submit the article to <em>Signs</em> and await publication.</li>
+  </ol>
+  <p>Much is ignored by this model: not only the order of words but the identity of the author, the date of composition, even the title. Yet this drastic simplification allows us to hand the task of categorizing the language of 1866 <em>Signs</em> articles to the computer, and to use it to aid our reading of the journal as a whole and as a collection of very diverse parts.</p>
+  <p>The inputs to the algorithm consisted of the digitally scanned and encoded version of the journal, with bibliographic data and text as supplied by the staff of JSTOR’s <a target="_blank" href="http://dfr.jstor.org">Data for Research</a> service. </p>
+  <p>The algorithmic nature of the technique does not mean the model presented here is free of interpretation. The major interpretive choice is, of course, the decision to offer the model in the first place. But other, technical choices are interpretive as well. The algorithm requires the user to specify the number of topics in advance; we have settled on 70 topics as yielding a suggestive and interesting model of our archive. We have also not taken every page of <em>Signs</em> into consideration; we have limited ourselves to articles (rather than reviews) and we have excluded short texts (those under 800 words). We have omitted from consideration a list of <em>stop words</em> (including very common words like <em>the</em> and <em>and</em>, personal names, and certain terms common to article reference lists) which distort the modeling results. The same applies to very rare words; we have also omitted words occurring four or fewer times in the whole corpus. Though it would be possible to combine morphologically related words, we have decided it is worth preserving the different verbal associations of, for example, <em>woman</em> and <em>women</em>.</p>
+  <h4>The software</h4>
+  <p>To construct the topic model, we have used <a target="_blank" href="http://mallet.cs.umass.edu">MALLET</a> by Andrew K. McCallum et al., as well as the <a target="_blank" href="http://cran.r-project.org/web/packages/mallet/index.html">R mallet package</a> by David Mimno and the <a target="_blank" href="http://github.com/agoldst/dfrtopics">dfrtopics package</a> by Andrew Goldstone. This site builds on <a target="_blank" href="http://agoldst.github.io/dfr-browser/">dfr-browser</a> by Andrew Goldstone. It also uses the code of the following open-source projects: <a target="_blank" href="http://d3js.org">d3</a> by Mike Bostock; <a target="_blank" href="http://getbootstrap.com/">bootstrap</a> by Twitter, Inc.; <a target="_blank"href="http://jquery.com">jQuery</a> by the jQuery Foundation; and <a target="_blank" href="http://stuk.github.io/jszip/">JSZip</a> by Stuart Knightley.</p>
+  <p>This site works best in recent web browsers and on screens that are at least 1500 pixels wide.  The total data download is approximately one megabyte.
+  On touchscreen devices, some features may not work as expected.
+  </p>
+</div>
+
+      </div><!-- discussion_text -->
+    </div><!-- .row -->
+  </div><!-- about_view -->
+
+
+  <div id="topic_view" class="hidden">
+    <div id="topic_view_help" class="hidden">
+      <p class="help">Select a topic from the “Topic” menu at left.</p>
+    </div>
+    <div id="topic_view_main">
+        <div id="topic_view_header">
+          <h2 id="topic_header"></h2>
+          <h3 id="topic_subheader" class="hidden">
+            <span class="topic_subtitle"></span>
+          </h3>
+        </div>
+        <div id="topic_view_annotation">
+          <!-- insert class="view_topic_nn" specific notes here -->
+          <p class="hidden view_topic_1 view_topic_10 view_topic_22 view_topic_48">This topic appears to merge two relatively independent sets of related terms.</p>
+          <p class="hidden view_topic_2">Brittney Cooper discusses this topic in her <a href="/commentaries/#cooper">comment</a>.</p>
+          <p class="hidden view_topic_3">With an emphasis on sex work in transnational contexts.</p>
+          <p class="hidden view_topic_4">With an emphasis on the language of psychoanalysis.</p>
+          <p class="hidden view_topic_5">With an emphasis on science studies.</p>
+          <p class="hidden view_topic_6">With a focus on beauty and consumption.</p>
+          <p class="hidden view_topic_8">A difficult-to-interpret collection of &ldquo;argument words.&rdquo;</p>
+          <p class="hidden view_topic_9">Susan Sidlauskas discusses this topic in her <a href="/commentaries/#sidlauskas">comment</a>.</p>
+          <p class="hidden view_topic_12">Cynthia Daniels discusses this topic in her <a href="/commentaries/#daniels">comment</a>.</p>
+          <p class="hidden view_topic_13">Cynthia Daniels discusses this topic in her <a href="/commentaries/#daniels">comment</a>.</p>
+          <p class="hidden view_topic_14">With a focus on the psychology of sex differences.</p>
+          <p class="hidden view_topic_15">The prominent word <em>life</em> does not seem to fit well in this topic.</p>
+          <p class="hidden view_topic_18">Mary Hawkesworth discusses this topic in her <a href="/commentaries/#hawkesworth">comment</a>.</p>
+          <p class="hidden view_topic_19">Catharine R. Stimpson discusses this topic in her <a href="/commentaries/#stimpson">comment</a>.</p>
+          <p class="hidden view_topic_20">The words in this topic seem to be prominent in the language of interviews and autobiographical writing.</p>
+          <p class="hidden view_topic_23">Joanna Kempner discusses this topic in her <a href="/commentaries/#kempner">comment</a>.</p>
+          <p class="hidden view_topic_25">Magdalena Grabowska discusses this topic in her <a href="/commentaries/#grabowska">comment</a>.</p>
+          <p class="hidden view_topic_29">Suzanna Danuta Walters discusses this topic in her <a href="/commentaries/#walters">comment</a>.</p>
+          <p class="hidden view_topic_30">Mary Hawkesworth discusses this topic in her <a href="/commentaries/#hawkesworth">comment</a>.
+          <p class="hidden view_topic_37">Agatha Beins discusses this topic in her <a href="/commentaries/#beins">comment</a>.</p>
+          <p class="hidden view_topic_41">With an emphasis on epistemology. Mary Hawkesworth discusses this topic in her <a href="/commentaries/#hawkesworth">comment</a>.</p>
+          <p class="hidden view_topic_44">A difficult-to-interpret collection of very common words.</p>
+          <p class="hidden view_topic_49">A difficult-to-interpret set of thematically disconnected terms.</p>
+          <p class="hidden view_topic_51">Kathryn Norberg discusses this topic in her <a href="/commentaries/#norberg">comment</a>.</p>
+          <p class="hidden view_topic_52">In their comments, <a href="/commentaries/#britton">Dana Britton</a> and <a href="/commentaries/#phillips">Danielle Phillips</a> discuss this topic.</p>
+          <p class="hidden view_topic_54">With an emphasis on music and fashion.</p>
+          <p class="hidden view_topic_56">Catharine R. Stimpson discusses this topic in her <a href="/commentaries/#stimpson">comment</a>.</p>
+          <p class="hidden view_topic_60">Dana Britton discusses this topic in her <a href="/commentaries/#britton">comment</a>.</p>
+          <p class="hidden view_topic_63">Discussions of the field of women’s studies itself. Kayo Denda reflects on this topic in her <a href="/commentaries/#denda">comment</a>.</p>
+          <p class="hidden view_topic_64">Kayo Denda discusses this topic in her <a href="/commentaries/#denda">comment</a>.</p>
+          <p class="hidden view_topic_65"> And transnationalism. Danielle Phillips discusses this topic in her <a href="/commentaries/#phillips">comment</a>.</p>
+          <p class="hidden view_topic_69">Kayo Denda discusses this topic in her <a href="/commentaries/#denda">comment</a>.</p>
+        </div>
+      <div class="row">
+        <div id="topic_words" class="col-md-3">
+          <h3 class="h-small">Top words</h3>
+          <table class="table table-condensed" id="topic_words">
+            <thead>
+              <tr>
+                <th>Word</th>
+                <th class="th-right">Weight</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-9">
+          <div id="topic_yearly">
+            <div class="pull-left">
+              <h3 class="h-small">Yearly proportion of words in topic</h3>
+              <p>
+                <span id="topic_remark"></span> in total.
+                <span class="help">
+                  Click a bar to limit articles to that year.
+                </span>
+              </p>
+            </div>
+            <div class="pull-right">
+              <button class="btn btn-default disabled" type="button"
+                id="topic_year_clear">clear selected year</button>
+            </div>
+            <div id="topic_plot">
+            </div>
+          </div>
+          <div id="topic_docs">
+            <h3 id="topic_docs_header" class="h-small">Top articles<span class="topic_year"></span></h3>
+            <p class="help none">There are no articles containing this topic<span class="topic_year"></span>.</p>
+            <table class="table table-condensed hidden calc-done">
+              <thead>
+                <tr>
+                  <th id="topic_docs_doc">Article</th>
+                  <th id="topic_docs_weight"></th>
+                  <th id="topic_docs_frac" class="th-right">%</th>
+                  <th id="topic_docs_tokens" class="th-right">Tokens</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div> <!-- #topic_docs -->
+        </div>
+      </div>
+    </div> <!-- #topic_view_main -->
+  </div>
+
+  <div id="doc_view" class="hidden">
+    <div id="doc_view_help">
+      <p class="help">Choose a specific article to view from 
+      <a class="external" href="#/bib">the bibliography</a> or from
+        <a class="external" href="#/topic">a topic page</a>.</p>
+      <p class="help hidden" id="last_doc_help">Below: the last-viewed article. Stable link to this page: <a class="external" id="last_doc" href="#/doc"></a></p>
+    </div>
+    <div id="doc_view_main" class="calc-done">
+      <h2 class="h-small" id="doc_header"></h2>
+      <p id="doc_remark">
+        <span class="special_issue">Special issue: <a></a>.</span>
+        <span class="token_count"></span> tokens.
+        (<a class="jstor external">view on JSTOR</a>)
+      </p>
+      <table class="table table-condensed" id="doc_topics">
+        <thead>
+          <tr>
+            <th id="doc_view_topic" class="wide">Topic</th>
+            <th id="doc_view_weight"></th>
+            <th id="doc_view_frac" class="th-right">%</th>
+            <th id="doc_view_tokens" class="th-right">Tokens</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div><!-- #doc_view_main -->
+  </div>
+
+  <div id="word_view" class="hidden">
+    <div class="row">
+      <div class="col-md-8">
+        <div id="word_view_help">
+          <p class="help">Choose a specific word to view from 
+          <a class="external" href="#/words">the list of all words</a> or from
+            <a class="external" href="#/topic">a topic page</a>.</p>
+          <p class="help hidden" id="last_word_help">Below: the last-viewed word. Stable link to this page: <a class="external" id="last_word" href="#/word"></a></p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <form id="word_view_form" class="form-inline pull-right" role="form">
+          <div class="form-group">
+            <label class="sr-only" for="word_input">Choose a word:</label>
+            <input type="text" class="form-control" id="word_input" placeholder="Enter a word">
+          </div>
+          <button type="submit" class="btn btn-default">List topics</button>
+        </form>
+      </div>
+    </div>
+    <div id="word_view_main" class="row">
+      <div class="col-md-12">
+        <h2 id="word_header">Prominent topics for <span class="word"></span></h2>
+        <div id="word_view_explainer">
+          <p class="help">Click row labels to go to the corresponding topic page; click a word to show the topic list for that word.</p>
+        </div>
+        <div class="alert alert-info none hidden">
+          <p>There are no topics in which this word is prominent.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bib_view" class="hidden">
+    <div class="row">
+      <div class="col-md-9">
+        <h2>Bibliography</h2>
+        <div id="bib_main"></div>
+      </div>
+      <div class="col-md-3">
+        <div id="bib_headings" data-spy="affix">
+          <form id="bib_sort_form">
+            <div class="form-group">
+              <select class="form-control" id="select_bib_sort">
+                <option id="sort_issue_journal" value="issue_journal">
+                  Sort by journal issue
+                </option>
+                <option id="sort_alpha_alpha" value="alpha_alpha">
+                  Sort alphabetically by author
+                </option>
+                <option id="sort_year_alpha" value="year_alpha">
+                  Sort by year, then by author
+                </option> 
+              </select>
+            </div>
+            <div class="form-group">
+              <select class="form-control" id="select_bib_dir">
+                <option id="sort_bib_up" value="up">
+                  in ascending order
+                </option>
+                <option id="sort_bib_down" value="down">
+                  in descending order
+                </option>
+              </select>
+            </div>
+          </form>
+          <p class="help">jump to:</p>
+          <ul class="list-inline">
+          </ul>
+          <p><a class="top_link" href="#">top</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="words_view" class="hidden">
+    <h2>All words prominent in any topic</h2>
+    <p class="help">Words not prominent in any topic are not listed</p>
+    <ul id="vocab_list" class="list-unstyled"></ul>
+  </div>
+
+</div> <!-- #view -->
+</div> <!-- .row -->
+</div> <!-- .container -->
+
+<footer>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 col-md-offset-1">
+        <h4><a href="http://signsjournal.org" target="_blank"><span class="glyphicon glyphicon-link"></span> Main <em>Signs</em> Website</h4>
+      </div>
+      <div class="col-md-3 col-md-offset-1">
+        <h4><a href="/credits"><span class="glyphicon glyphicon-link"></span> <em>Signs</em>@40 Credits</h4></a>
+      </div>
+      <div class="col-md-3 col-md-offset-1">
+        <div class="twitter_button">
+          <a href="https://twitter.com/share" class="twitter-share-button" data-via="signsjournal" data-size="large">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script type="text/javascript" src="lib/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="lib/bootstrap.min.js"></script>
+<script type="text/javascript" src="lib/jszip.min.js"></script>
+
+<script type="text/javascript" src="js/utils.min.js"></script>
+<script type="text/javascript" src="js/dfb.min.js"></script>
+
+<script type="text/javascript">
+  main();
+</script>
+
+</body>
+
+</html>
