@@ -5,22 +5,39 @@ The collection of scripts in the `modeling` subdirectory were used to create the
 
 In addition to the missing source data, thanks to the use of file paths specific to the computers used to generate the model, these scripts would need some modification to run on another system. However, we have included them for the purposes of documentation, so that our topic-modeling choices are explicit. Much of this code uses [dfrtopics](http://github.com/agoldst/dfrtopics), an in-development R package by Andrew Goldstone to help use MALLET from R to analyze [JSTOR Data for Research][dfr] datasets.
 
-- *Metadata*. Metadata was mostly as supplied by JSTOR. One issue's metadata, however, was missing. This data we obtained by exporting citations for *Signs* 40, no. 1 from the regular JSTOR site in RIS format, converting that data into CSV format a [small python script](https://github.com/agoldst/mla14/blob/master/mlaib2014/aggregate_ris.py), and then processing the CSV into the expected metadata format using [metadata_40.1.R](modeling/metadata_40.1.R).
+# Metadata
 
-- *Featurizing*. The [instances_stoprefs.R][inst] script was used to build the MALLET instances file from the full texts. Notable choices:
-    + Our list of stop words is in [stop_refs.txt](modeling/stoplist/stop_refs.txt). In addition to very frequent words, names, and similar, we also removed a set of words whose over-representation in article reference lists created problematic results in the modeling process. These words were found using the `ref_words` function in [instances_stoprefs.R][inst]. 
-    + We used MALLET to tokenize the text, opting for MALLET's default tokenization (by the regular expression `\p{Alpha}+`).
+Metadata was mostly as supplied by JSTOR. One issue's metadata, however, was missing. This data we obtained by exporting citations for *Signs* 40, no. 1 from the regular JSTOR site in RIS format, converting that data into CSV format with a [small python script](https://github.com/agoldst/mla14/blob/master/mlaib2014/aggregate_ris.py), and then processing the CSV into the expected metadata format using [metadata_40.1.R](modeling/metadata_40.1.R).
 
-- *Modeling parameters*. MALLET is used to generate the model via the [model_k70.R][model] script. The key parameter is the number of topics, 70. This script also sets Java's random seed. This is important for being to reproduce exactly the same model over more than one run.
+# Featurizing
 
-- *An operator error.* We discovered late into our development process that one issue's worth of articles was omitted from the model inputs. As the beta version of our visualization was already being used by commentators, we did not want to rerun the model and reshuffle all of the topics. Instead, we constructed a compatible MALLET instances file of the missing documents ([modeling/instance_signs39.4.R](modeling/instance_signs39.4.R)) and used MALLET's capacity to infer topics for new documents on the basis of an existing model. This inferencing process is scripted at the end of [model_k70.R][model]. This might be of some interest to R and MALLET users, as it shows how to use the [rJava](http://www.rforge.net/rJava/) glue to interact with MALLET's Java API from R. 
+The [instances_stoprefs.R][inst] script was used to build the MALLET instances file from the full texts.
 
-- *Browser data generation.* The script [browser_k70.R](modeling/browser_k70.R) prepares the most of the data inputs for the web-browser visualization code.
+Our list of stop words is in [stop_refs.txt](modeling/stoplist/stop_refs.txt). In addition to very frequent words, names, and similar, we also removed a set of words whose over-representation in article reference lists created problematic results in the modeling process. These words were found using the `ref_words` function in [instances_stoprefs.R][inst]. 
+
+We used MALLET to tokenize the text, opting for MALLET's default tokenization (by the regular expression `\p{Alpha}+`).
+
+# Modeling parameters
+
+MALLET is used to generate the model via the [model_k70.R][model] script. The key parameter is the number of topics, 70. This script also sets Java's random seed. This is important for being to reproduce exactly the same model over more than one run.
+
+# An operator error
+
+We discovered late into our development process that one issue's worth of articles was omitted from the model inputs. As the beta version of our visualization was already being used by commentators, we did not want to rerun the model and reshuffle all of the topics. Instead, we constructed a compatible MALLET instances file of the missing documents ([modeling/instance_signs39.4.R](modeling/instance_signs39.4.R)) and used MALLET's capacity to infer topics for new documents on the basis of an existing model. This inferencing process is scripted at the end of [model_k70.R][model]. This might be of some interest to R and MALLET users, as it shows how to use the [rJava](http://www.rforge.net/rJava/) glue to interact with MALLET's Java API from R. 
+
+# Browser data generation
+
+The script [browser_k70.R](modeling/browser_k70.R) prepares most of the data inputs for the web-browser visualization code.
+
 The [meta_fix.R](modeling/meta_fix.R) script incorporates additional hand-curated metadata about special issues and modifies two files in the [data](data/) directory: [info.json](data/info.json) and [meta.csv.zip](data/meta.csv.zip). The versions of these files in the repository (identical to those on [Signs@40][s40]) have already been modified accordingly, so we have not included the additional metadata these scripts use as input.
 
-- *Browser source.* The model browser itself is written in JavaScript. The running code lives in the [js](js/) subdirectory, but these files are generated by [uglifyJS](http://github.com/mishoo/UglifyJS2) from the actual source in the [src](src/) directory. The supplied [Makefile](Makefile) has an `uglify` target. 
+# Browser source
 
-- *Libraries.* The visualization makes use of the following open-source libraries, included here in order to record the particular versions of those libraries we have made use of: 
+The model browser itself is written in JavaScript. The running code lives in the [js](js/) subdirectory, but these files are generated by [uglifyJS](http://github.com/mishoo/UglifyJS2) from the actual source in the [src](src/) directory. The supplied [Makefile](Makefile) has an `uglify` target. 
+
+# Libraries
+
+The visualization makes use of the following open-source libraries, included here in order to record the particular versions of those libraries we have made use of: 
 [d3](http://d3js.org) by Mike Bostock;
 [bootstrap](http://getbootstrap.com/) by Twitter, Inc. (customization parameters in [config.json](config.json));
 [jQuery](http://jquery.com) by the jQuery Foundation; and
